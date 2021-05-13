@@ -2,7 +2,7 @@
 <config>
 	<modules>
 		<Ccc_Vendor>
-			<version>1.0.2</version>
+			<version>1.0.8</version>
 		</Ccc_Vendor>
 	</modules>
 
@@ -27,6 +27,35 @@
 			</updates>
 		</layout>
 	</adminhtml>
+
+	<frontend>
+		<routers>
+			<vendor>
+				<use>standard</use>
+				<args>
+					<module>Ccc_Vendor</module>
+					<frontName>vendor</frontName>
+				</args>
+			</vendor>
+		</routers>
+		<layout>
+			<updates>
+				<vendor>
+					<file>vendor.xml</file>
+				</vendor>
+			</updates>
+		</layout>
+		<events>
+			<controller_action_layout_load_before>
+				<observers>
+					<vendor_is_logged_in_observer>
+						<class>vendor/observer</class>
+						<method>beforeLoadLayout</method>
+					</vendor_is_logged_in_observer>
+				</observers>
+			</controller_action_layout_load_before>
+		</events>
+	</frontend>
 
 	<global>
 		<helpers>
@@ -73,6 +102,15 @@
 					<eav_attribute>
 						<table>vendor_eav_attribute</table>
 					</eav_attribute>
+					<product>
+						<table>vendor_product_entity</table>
+					</product>
+					<product_attribute_group>
+						<table>vendor_product_attribute_group</table>
+					</product_attribute_group>
+					<product_request>
+						<table>vendor_product_request</table>
+					</product_request>
 				</entities>
 			</vendor_resource>
 		</models>

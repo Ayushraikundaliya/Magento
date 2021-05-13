@@ -20,6 +20,24 @@
 					<sort_order>100</sort_order>
 					<action>*/vendor_set</action>
 				</vendor_set>
+                <products translate="title" module="vendor">
+                    <title>Product</title>
+                    <children>
+                    	<products translate="title" module="vendor">
+                    		<title>Manage Product</title>
+                    		<action>*/product/</action>
+                		</products>
+                        <attributes translate="title" module="vendor">
+                            <title>Manage Product Attributes</title>
+                            <action>*/product_attribute/</action>
+                        </attributes>
+                        <sets translate="title" module="vendor">
+                            <title>Manage Product Attribute Sets</title>
+                            <action>*/product_set/</action>
+                        </sets>
+                    </children>
+                    <sort_order>200</sort_order>
+                </products>
 			</children>
 		</vendor>
 	</menu>

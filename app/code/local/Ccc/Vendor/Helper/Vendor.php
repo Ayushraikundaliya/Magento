@@ -13,7 +13,6 @@ class Ccc_Vendor_Helper_Vendor extends Mage_Core_Helper_Url
                 'source_model'      => 'eav/entity_attribute_source_boolean'
             )
         );
-
         if (is_null($inputType)) {
             return $inputTypes;
         } else if (isset($inputTypes[$inputType])) {
