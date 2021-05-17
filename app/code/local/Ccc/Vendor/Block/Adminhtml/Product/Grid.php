@@ -36,7 +36,6 @@ class Ccc_Vendor_Block_Adminhtml_Product_Grid extends Mage_Adminhtml_Block_Widge
             'entity_id',
             null,
             'inner',
-            $storeId
         );
 
         $collection->getSelect()->joinLeft(
