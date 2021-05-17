@@ -4,7 +4,7 @@ class Ccc_Vendor_Model_Resource_Setup extends Mage_Eav_Model_Entity_Setup
 {
     public function getDefaultEntities()
     {
-        /*return array(
+        return array(
             'vendor_product' => array(
                 'entity_model' => 'vendor/product',
                 'attribute_model' => 'vendor/resource_eav_attribute',
@@ -482,6 +482,6 @@ class Ccc_Vendor_Model_Resource_Setup extends Mage_Eav_Model_Entity_Setup
                     ),
                 ),
             ),
-        );*/
+        );
     }
 }
