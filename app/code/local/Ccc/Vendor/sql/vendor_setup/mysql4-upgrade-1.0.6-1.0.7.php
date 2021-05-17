@@ -22,11 +22,11 @@ $table = $installer->getConnection()
         'unsigned' => true,
         'nullable' => true,
     ), 'catalog product Id')
-    ->addColumn('store_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
+    /*->addColumn('store_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
         'unsigned' => true,
         'nullable' => true,
         'default'  => '0'
-    ), 'store Id')
+    ), 'store Id')*/
     ->addColumn('request_type', Varien_Db_Ddl_Table::TYPE_TEXT, null, array(
         'unsigned' => true,
         'nullable' => false,
