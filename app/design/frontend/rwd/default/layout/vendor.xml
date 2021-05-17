@@ -205,6 +205,21 @@
         </reference>
     </vendor_product_index>
 
+    <vendor_product_edit>
+        <remove name="right"/>
+        <reference name="content">
+            <block type="vendor/product_edit" name="product_edit" template="vendor/product/edit.phtml"/>
+        </reference>
+        <reference name="left">
+            <block type="vendor/product_edit_tabs" name="product_tabs" template="vendor/product/edit/tabs.phtml"/>
+        </reference>
+        <reference name="js">
+            <block type="adminhtml/catalog_product_edit_js" template="catalog/product/js.phtml"/>
+            <block type="core/template" template="catalog/wysiwyg/js.phtml"/>
+        </reference>
+        
+    </vendor_product_edit>
+
     <vendor_product_attribute_index translate="label">
        <label>Vendor product Attribute Grid</label>
         <update handle="vendor_account"/>

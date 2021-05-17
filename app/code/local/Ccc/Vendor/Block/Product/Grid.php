@@ -9,75 +9,29 @@ class Ccc_Vendor_Block_Product_Grid extends Mage_Core_Block_Template
 
     public function getProducts()
     {
-        $store = $this->_getStore();
-        $collection = Mage::getModel('vendor/product')->getResourceCollection()
-            ->addAttributeToSelect('sku')
+        //$store = $this->_getStore();
+        $collection = Mage::getModel('vendor/product')->getCollection()
+            ->addAttributeToSelect('price')
             ->addAttributeToSelect('name')
-            //->addAttributeToSelect('price')
-            ->addAttributeToSelect('status')
-            ->addAttributeToSelect('attribute_set_id')
-            ->addAttributeToSelect('type_id');           
-        
+            ->addAttributeToSelect('price')
+            //->addAttributeToSelect('status')
+            ->addAttributeToSelect('vendor_status');
             //$collection->setStoreId($store->getId());
-            $adminStore = Mage_Core_Model_App::ADMIN_STORE_ID;
-            //$collection->addStoreFilter($store);
-            $collection->joinAttribute(
-                'name',
-                'vendor_product/name',
-                'entity_id',
-                null,
-                'inner',
-                $adminStore
-            );
-            $collection->joinAttribute(
-                'custom_name',
-                'vendor_product/name',
-                'entity_id',
-                null,
-                'inner',
-                $store->getId()
-            );
-            
-            $collection->joinAttribute(
-                'status',
-                'vendor_product/status',
-                'entity_id',
-                null,
-                'inner',
-                $store->getId()
-            );
-            
-            $collection->joinAttribute(
-                'vendor_id',
-                'vendor_product/entity_type_id',
-                'entity_id',
-                null,
-                'inner',
-                $store->getId()
-            );
-
-            $collection->joinAttribute(
-                'price',
-                'vendor_product/price',
-                'entity_id',
-                null,
-                'left',
-                $store->getId()
-            );
+            //$adminStore = Mage_Core_Model_App::ADMIN_STORE_ID;
+            /*$collection->joinAttribute('vendor_status','vendor_product/vendor_status','entity_id', null,'inner');*/
+            $collection->joinAttribute('price','vendor_product/price','entity_id', null,'inner');
+            $collection->joinAttribute('name','vendor_product/name','entity_id', null,'inner');
+            /*$collection->joinAttribute('admin_status','vendor_product/admin_status','entity_id', null,'left');*/
+            /*$collection->joinAttribute('entity_id','vendor_product/entity_id','entity_id',null,'inner');*/
         
-            $collection->getSelect()->join(
+            $collection->getSelect()->joinLeft(
                 array('vendor_product_request' => 'vendor_product_request'),
                 'vendor_product_request.product_id = e.entity_id',
                 array('vendor_product_request.request_type','vendor_product_request.approve_status')
             );
-
-            
-        
-
-        /* $this->setCollection($collection);
-
-        parent::_prepareCollection();
-        $this->getCollection()->addWebsiteNamesToResult(); */
+            /*echo "<pre>";
+            print_r($collection->getData());
+            die();*/
         return $collection;
     }
 

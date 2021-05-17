@@ -63,6 +63,7 @@ class Ccc_Vendor_ProductController extends Mage_Core_Controller_Front_Action
                 
             }
             $productId = $this->getRequest()->getParam('id');
+            $vendorId = $this->_getSession()->getVendor()->getId();
             $productData = $this->getRequest()->getPost();
             $product = Mage::getSingleton('vendor/product');
             $sku = $this->getRequest()->getPost('sku');
@@ -103,14 +104,44 @@ class Ccc_Vendor_ProductController extends Mage_Core_Controller_Front_Action
                 $product->setVendorId($vendorId);
             }
             $product->addData($productData);
-            $product->save();
+            $product = $product->save();
+
+            if ($product) {
+                if (!$productId) {
+                    $productRequestModel = Mage::getModel('vendor/product_request');
+                    $productRequestModel->setVendorId($product->getVendorId());
+                    $productRequestModel->setProductId($product->getId());
+                    $productRequestModel->setRequestType('New');
+                    $productRequestModel->setApproveStatus('Pending');
+                    $productRequestModel->setCreatedAt(time());
+                    $productRequestModel->save();
+                } else {
+                    $productRequestModel = Mage::getResourceModel('vendor/product_request_collection')
+                        ->addFieldToFilter('product_id',array('eq',$product->getId()))->load()->getLastItem();
+                    $productRequestModel->setVendorId($this->_getSession()->getId());
+                    $productRequestModel->setProductId($product->getId());   
+                    $productRequestModel->setRequestType('Edited');
+                    $productRequestModel->setApproveStatus('Pending');
+                    $productRequestModel->setCreatedAt($product->getCreatedAt());
+                    /*echo "<pre>";
+                    print_r($productRequestModel);
+                    die();*/
+                    $productRequestModel->save();
+                }
+                
+            }
+            $this->_getSession()->addSuccess('Request send for this product.');
         } catch (Exception $th) {
+            echo "<pre>";
+            print_r($th);
+            die();
             Mage::getSingleton('core/session')->addError($this->__('Error in processing'));
             $this->_redirect('*/*/');
             return;
         }
         $this->_redirect('*/*/index');
     }
+
 
     public function deleteAction()
     {
@@ -124,15 +155,28 @@ class Ccc_Vendor_ProductController extends Mage_Core_Controller_Front_Action
                 throw new Exception('product does not exist');
             }
 
-            if (!$productModel->delete()) {
-                throw new Exception('Error in delete record', 1);
+            $productRequestModel = Mage::getResourceModel('vendor/product_request_collection')
+                ->addFieldtoFilter('product_id',array('eq',$productModel->getId()))->load()->getLastItem();
+
+            if ($productRequestModel && $productRequestModel->getId()) {
+                if ($productRequestModel->getApprovedStatus() == "Pending" && $productRequestModel->getApproveStatus != "Rejected") {
+                    $this->_getSession()->addError($this->__('The Product is not approved yet.'));
+                    $this->_redirect('*/*/');
+                    return;
+                }
             }
-
-            Mage::getSingleton('core/session')->addSuccess($this->__('The product has been deleted.'));
-
+            $productRequestModel->setRequestType('Deleted');
+            $productRequestModel->setApproveStatus('Pending');
+            $productRequestModel->setCreatedAt($productModel->getCreatedAt());
+            $productRequestModel->save();
+           
+            Mage::getSingleton('core/session')->addSuccess($this->__('Request send for delete product.'));
+            /* if (!$productModel->delete()) {
+                throw new Exception('Error in delete record');
+            } */
         } catch (Exception $e) {
             Mage::logException($e);
-            $Mage::getSingleton('core/session')->addError($e->getMessage());
+            Mage::getSingleton('core/session')->addError($e->getMessage());
         }
         
         $this->_redirect('*/*/');

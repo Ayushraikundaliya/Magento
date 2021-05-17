@@ -42,6 +42,8 @@ class Ccc_Vendor_Adminhtml_ProductController extends Mage_Adminhtml_Controller_A
     {
         $productId = (int) $this->getRequest()->getParam('id');
         $product   = $this->_initProduct();
+        /*echo $productId;
+        die();*/
 
         if ($productId && !$product->getId()) {
             $this->_getSession()->addError(Mage::helper('product')->__('This product no longer exists.'));
@@ -119,4 +121,138 @@ class Ccc_Vendor_Adminhtml_ProductController extends Mage_Adminhtml_Controller_A
         
         $this->_redirect('*/*/');
     }
+
+    public function newApproveAction()
+    {
+        $vendor = Mage::getSingleton('vendor/vendor');
+        /*echo "<pre>";
+        print_r($this->getRequest()->getParam('id'));
+        die();*/
+        $productId = (int) $this->getRequest()->getParam('id');
+        $product = $this->_initProduct();
+
+        try {
+
+            if ($productId && !$product->getId()) {
+                $this->_getSession->addError('This product no longer exists');
+                $this->_redirect('*/*/');
+            }
+            $productRequestModel = Mage::getResourceModel('vendor/product_request_collection')
+                ->addFieldtoFilter('product_id',array('eq',$product->getId()))->load()->getLastItem();
+
+            if ($productRequestModel->getRequestType() == 'Edited' && $productRequestModel->getCatalogProductId()) {
+                $this->_forward('editApprove');
+                return;
+            }
+            
+            if ($productRequestModel->getRequestType() == 'Delete') {
+                $this->_forward('delete');
+                return;
+            }
+            $catalogProductModel = Mage::getModel('catalog/product');
+            $entityType = $catalogProductModel->getResource()->getEntityType();
+            $defaultAttributesetId = $entityType->getDefaultAttributeSetId();
+            $productData = $product->getData();
+            unset($productData['entity_id']);
+            $catalogProductModel->addData($productData);
+            $catalogProductModel->setStoreId($this->getRequest()->getParam('store',0));
+            $catalogProductModel->setEntityType($entityType);
+            $catalogProductModel->setAttributeSetId($defaultAttributesetId);
+            
+            if ($catalogProductModel->save()) {
+               
+                $productRequestModel->setProductId($productId);
+                
+                $productRequestModel->setCatalogProductId($catalogProductModel->getId());
+                $productRequestModel->setApproveStatus('Approved');
+                $productRequestModel->setCreatedAt($product->getCreatedAt());
+                $productRequestModel->setApprovedAt(time());
+                $productRequestModel->setRequestType('New');
+                /*echo "<pre>";
+                print_r($productRequestModel);
+                die();*/
+
+                $productRequestModel->save();
+
+            }
+            Mage::getSingleton('core/session')->addSuccess($this->__('New product has been Approved.'));
+        } catch (Exception $th) {
+            Mage::logException($th);
+            Mage::getSingleton('core/session')->addError($th->getMessage());
+        }
+        $this->_redirect('*/*/');
+   } 
+
+   public function editApproveAction()
+   {
+        $productId = (int) $this->getRequest()->getParam('id');
+        $product = Mage::getModel('vendor/product')
+            ->setStoreId($this->getRequest()->getParam('store',0))
+            ->load($productId);
+            
+            if (!$productId) {
+                if ($setId = (int)$this->getRequest()->getParam('set')) {
+                    Mage::getModel('adminhtml/session')->setId($setId);
+                }
+            }  
+            
+            try {
+                if ($productId && !$product->getId()) {
+                    $this->_getSession->addError('This product no longer exists');
+                    $this->_redirect('*/*/');
+                }
+                $productData = $product->getData();
+                unset($productData['entityId']);
+                unset($productData['entity_Type']);
+                unset($productData['attribute_set_id']);
+                unset($productData['store_id']);
+
+                $productRequestModel = Mage::getResourceModel('vendor/product_request_collection')
+                ->addFieldtoFilter('vendor_id',array('eq',$product->getVendorId()))->load()->getLastItem();
+
+                $catalogProductModel = Mage::getModel('catalog/product');
+                $catalogProductId = $catalogProductModel->getCatalogProductId();
+                
+                if ($catalogProductModel->load($catalogProductId)) {
+                    $catalogProductModel->addData($productData);
+                    $catalogProductModel->save();
+                    $productRequestModel->setRequestType('Edited');
+                    $productRequestModel->setApproveStatus('Approved');
+                    $productRequestModel->setCreatedAt($product->getUpdatedAt());
+                    $productRequestModel->setApproveAt(time());
+                    $productRequestModel->save();
+                    Mage::getSingleton('core/session')->addSuccess($this->__('Edit product Request has been Approved.'));
+                    $this->_redirect('*/*/');
+                }
+            } catch (Exception $e) {
+                Mage::logException($th);
+                Mage::getSingleton('core/session')->addError($th->getMessage());
+                $this->_redirect('*/*/');
+            }
+   }
+
+   public function rejectAction()
+   {
+        $productId = (int) $this->getRequest()->getParam('id');
+        $product = $this->_initProduct();
+        try {
+            if ($productId && !$product->getId()) {
+                $this->_getSession->addError('This product no longer exists');
+                $this->_redirect('*/*/');
+            }
+            $productRequestModel = Mage::getResourceModel('vendor/product_request_collection')
+                ->addFieldtoFilter('product_id',array('eq',$product->getId()))->load()->getLastItem();
+             $productRequestModel->setApproveStatus('Rejected');
+             $productRequestModel->setCreatedAt($product->getCreatedAt());
+             $productRequestModel->setApproveAt(time());
+             $productRequestModel->save();
+             Mage::getSingleton('core/session')->addSuccess($this->__('product has been Rejected.'));
+
+        } catch (Exception $e) {
+            Mage::logException($e);
+                Mage::getSingleton('core/session')->addError($e->getMessage());
+        }
+        $this->_redirect('*/*/');
+   }
+
 }

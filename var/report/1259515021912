@@ -1,0 +1,22 @@
+a:5:{i:0;s:1415:"Error in file: "C:\xampp\htdocs\magento\app\code\local\Ccc\Vendor\sql\vendor_setup\mysql4-upgrade-1.0.6-1.0.7.php" - SQLSTATE[42S01]: Base table or view already exists: 1050 Table 'vendor_product_request' already exists, query was: CREATE TABLE `vendor_product_request` (
+  `request_id` int NOT NULL auto_increment COMMENT 'request ID' ,
+  `vendor_id` int UNSIGNED NOT NULL COMMENT 'vendor ID' ,
+  `product_id` int UNSIGNED NOT NULL COMMENT 'product Id' ,
+  `catalog_product_id` int UNSIGNED NULL COMMENT 'catalog product Id' ,
+  `request_type` text NOT NULL COMMENT 'request_type' ,
+  `approve_status` text NOT NULL COMMENT 'approve_status' ,
+  `created_at` datetime NOT NULL COMMENT 'created_at' ,
+  `approved_at` datetime NOT NULL COMMENT 'approved_at' ,
+  PRIMARY KEY (`request_id`),
+  CONSTRAINT `FK_VENDOR_PRODUCT_REQUEST_VENDOR_ID_VENDOR_ENTITY_ID` FOREIGN KEY (`vendor_id`) REFERENCES `vendor` (`entity_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_VENDOR_PRD_REQUEST_PRD_ID_VENDOR_PRD_ENTT_ENTT_ID` FOREIGN KEY (`product_id`) REFERENCES `vendor_product_entity` (`entity_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_VENDOR_PRD_REQUEST_CAT_PRD_ID_CAT_PRD_ENTT_ENTT_ID` FOREIGN KEY (`product_id`) REFERENCES `catalog_product_entity` (`entity_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) COMMENT='vendor Product Request Backend Table' ENGINE=INNODB charset=utf8 COLLATE=utf8_general_ci";i:1;s:954:"#0 C:\xampp\htdocs\magento\app\code\core\Mage\Core\Model\Resource\Setup.php(644): Mage::exception('Mage_Core', 'Error in file: ...')
+#1 C:\xampp\htdocs\magento\app\code\core\Mage\Core\Model\Resource\Setup.php(437): Mage_Core_Model_Resource_Setup->_modifyResourceDb('upgrade', '1.0.6', '1.0.9')
+#2 C:\xampp\htdocs\magento\app\code\core\Mage\Core\Model\Resource\Setup.php(320): Mage_Core_Model_Resource_Setup->_upgradeResourceDb('1.0.6', '1.0.9')
+#3 C:\xampp\htdocs\magento\app\code\core\Mage\Core\Model\Resource\Setup.php(235): Mage_Core_Model_Resource_Setup->applyUpdates()
+#4 C:\xampp\htdocs\magento\app\code\core\Mage\Core\Model\App.php(428): Mage_Core_Model_Resource_Setup::applyAllUpdates()
+#5 C:\xampp\htdocs\magento\app\code\core\Mage\Core\Model\App.php(354): Mage_Core_Model_App->_initModules()
+#6 C:\xampp\htdocs\magento\app\Mage.php(683): Mage_Core_Model_App->run(Array)
+#7 C:\xampp\htdocs\magento\index.php(83): Mage::run('', 'store')
+#8 {main}";s:3:"url";s:34:"/magento/index.php/vendor/product/";s:11:"script_name";s:18:"/magento/index.php";s:4:"skin";s:7:"default";}

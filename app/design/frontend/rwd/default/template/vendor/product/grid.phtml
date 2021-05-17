@@ -1,11 +1,10 @@
 <?php echo $this->getMessagesBlock()->toHtml() ?>
 <?php $products = $this->getProducts();?>
-<?php //echo "<pre>"; print_r($products->getData()); die;?>
+
 <div class="page-title">
     <h1><?php echo $this->__('My Products') ?></h1>
 </div>
-<?php //echo $this->getPagerHtml(); ?>
-<a href="<?php echo $this->getAddUrl(); ?>" class="Add_button"><?php echo $this->__('Add New Product') ?></a><br><br>
+<a href="<?php echo $this->getAddUrl(); ?>" style="background: black;" class="Add_button"><?php echo $this->__('Add New Product') ?></a><br><br>
 
 <?php if ($products->getData()): ?>
 <table class="data-table" id="my-product-table">
@@ -13,7 +12,6 @@
         <tr>
             <th><?php echo $this->__('#') ?></th>
             <th><?php echo $this->__('Name') ?></th>
-            <!-- <th><?php //echo $this->__('Type') ?></th> -->
             <th><?php echo $this->__('SKU') ?></th>
             <th><?php echo $this->__('Price') ?></th>
             <th><?php echo $this->__('Request Type') ?></th>
@@ -25,8 +23,7 @@
         <?php foreach ($products->getData() as $product): ?>
         <tr>
             <td><?php echo $product['entity_id']; ?>&nbsp;</td>
-            <td><?php echo $product['custom_name']; ?>&nbsp;</td>
-            <!-- <td><?php //echo $product['type_id']; ?>&nbsp;</td> -->
+            <td><?php echo $product['name']; ?>&nbsp;</td>
             <td><?php echo $product['sku']; ?>&nbsp;</td>
             <td><?php echo $product['price']; ?>&nbsp;</td>
             <td><?php echo $product['request_type']; ?>&nbsp;</td>
@@ -51,7 +48,7 @@
 </script>
 <?php echo $this->getPagerHtml(); ?>
 <?php else: ?>
-    <p><?php echo $this->__('You have Products yet.'); ?></p>
+    <p><?php echo $this->__('You have no Products yet.'); ?></p>
 <?php endif?>
 <style type="text/css">
     

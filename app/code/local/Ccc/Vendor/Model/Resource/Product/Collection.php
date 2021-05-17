@@ -5,6 +5,5 @@ class Ccc_Vendor_Model_Resource_Product_Collection extends Mage_Catalog_Model_Re
 	{
 		$this->setEntity('vendor_product');
 		parent::__construct();
-		
 	}
 }

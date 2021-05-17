@@ -28,12 +28,11 @@ class Ccc_Vendor_Block_Product_Edit_Tabs extends Mage_Core_Block_Template
 		$vendorProduct = Mage::getModel('vendor/product');
 		$attributeSetId = $vendorProduct->getResource()->getEntityType()->getDefaultAttributeSetId();
 		$entityTypeId = $vendorProduct->getResource()->getEntityType()->getId();
-
 		// FOR GET ALL GROUP FROM PERTICULAR VENDOR
 		$vendorProductAttributeGroup = Mage::getResourceModel('vendor/product_attribute_group_collection');
 		$vendorProductAttributeGroup->getSelect()->where('main_table.vendor_id = '.$vendorId);
 		$vendorProductAttributeGroup = $vendorProductAttributeGroup->load();
-		
+        
 		// FETCH ATTRIBUBTE VENDOR_ID WISE
         $vendorProductAttributes = Mage::getModel('vendor/resource_product_attribute_collection')
         	->addFieldToFilter('attribute_code', array('like' => '%' . $vendorId . '%'));
