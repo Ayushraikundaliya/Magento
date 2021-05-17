@@ -25,7 +25,7 @@ $table = $installer->getConnection()
     ->addColumn('store_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
         'unsigned' => true,
         'nullable' => true,
-        'default'  => '1'
+        'default'  => '0'
     ), 'store Id')
     ->addColumn('request_type', Varien_Db_Ddl_Table::TYPE_TEXT, null, array(
         'unsigned' => true,

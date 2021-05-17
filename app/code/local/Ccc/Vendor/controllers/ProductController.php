@@ -132,9 +132,9 @@ class Ccc_Vendor_ProductController extends Mage_Core_Controller_Front_Action
             }
             $this->_getSession()->addSuccess('Request send for this product.');
         } catch (Exception $th) {
-            echo "<pre>";
+            /*echo "<pre>";
             print_r($th);
-            die();
+            die();*/
             Mage::getSingleton('core/session')->addError($this->__('Error in processing'));
             $this->_redirect('*/*/');
             return;
