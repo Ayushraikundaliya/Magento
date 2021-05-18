@@ -30,14 +30,14 @@ class Ccc_Vendor_Block_Adminhtml_Product_Grid extends Mage_Adminhtml_Block_Widge
             ->addAttributeToSelect('vendor_status')
             ->addAttributeToSelect('admin_status')
             ->addAttributeToSelect('vendor_id');
-        $collection->joinAttribute(
+        /*$collection->joinAttribute(
             'id',
             'vendor_product/entity_id',
             'entity_id',
             null,
             'inner',
             $storeId
-        );
+        );*/
 
         $collection->getSelect()->join(
             array('vendor_product_request' => 'vendor_product_request'),
